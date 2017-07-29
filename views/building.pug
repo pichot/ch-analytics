@@ -1,0 +1,54 @@
+extends layout
+
+block content
+  h1= b.parcel_add
+    if b.vacant
+      span.label.label-warning Vacant
+  h3= b.owner
+  if b.own_occup
+    span.label.label-primary Owner-Occupied
+  else
+    span.label.label-primary Not Owner-Occupied
+
+  div.row
+    div.col-md-6
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Sale
+        ul.list-group
+          li.list-group-item Last Sale Date #{b.last_sale}
+          li.list-group-item Sale Amount #{a.formatMoney(b.sale_amoun)}
+          li.list-group-item Seller #{b.seller}
+
+    div.col-md-6
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Tax Information
+        ul.list-group
+          li.list-group-item Building Tax #{a.formatMoney(b.building_t)}
+          li.list-group-item Gross Tax #{a.formatMoney(b.gross_tax)}
+          li.list-group-item Land Tax #{a.formatMoney(b.land_tax)}
+        
+  div.row  
+    div.col-md-6
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Land Use
+        ul.list-group
+          li.list-group-item Land Use Code #{b.land_use}
+          li.list-group-item Property Code #{b.propcode}
+          li.list-group-item Number of Building Permits #{b.perm_num}
+          li.list-group-item Total Commercial Square Feet #{b.tot_com_sq}
+          li.list-group-item Total Residential Square Feet #{b.tot_res_sq}
+          li.list-group-item Total Square Feet #{b.total_sqft}
+
+    div.col-md-6
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Property Events
+        ul.list-group
+          li.list-group-item # of Foreclosures #{b.fc_count}
+          li.list-group-item # of Police Dispatches #{b.pd_count}
+          li.list-group-item # of Complaints #{b.comp_count}
+          li.list-group-item Years from the Last Case #{b.last_case}
+          li.list-group-item Number of Negative Actions #{b.negact_cou}
