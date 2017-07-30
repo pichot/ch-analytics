@@ -1,6 +1,11 @@
 extends layout
 
 block content
+  nav.navbar.navbar-default
+    div.container-fluid
+      div.navbar-header
+        a.navbar-brand(href='/buildings') CH Building Intellgience Database
+  
   h1= b.parcel_add
     if b.vacant
       span.label.label-warning Vacant

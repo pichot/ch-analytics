@@ -1,48 +1,139 @@
-// Map and Baselayer
-var map = L.map('map').setView([41.520052, -81.556235], 15);
-var basemap = new L.TileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}@2x.png');
-map.addLayer(basemap);
+mapboxgl.accessToken = 'pk.eyJ1IjoicGljaG90IiwiYSI6Ii0zSXN0bFkifQ.svxKy-nsJZ53Imf43Z7dXg';
 
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-81.5633295217516, 41.514041862836166],
+    zoom: 12.071350911527107
+});
 
-// Layer
-var style = function(feature) {
-  return {
-    color: '#3182bd',
-    weight: 3,
-    opacity: 1
-  }
-}
+map.on('load', function () {
+  var cartoDiv = document.getElementById('carto');
 
-var makePopUpContent = function(p) {
-  return '<div class="popup-content">' +
-           '<p><strong>ID:</strong> ' + p.parcel_id + '</p>' +
-           '<p><strong>Address:</strong> ' + p.parcel_add + '</p>' +
-         '</div>'
-}
+  console.log(cartoDiv.dataset.cartolayergroup);
 
-var buildingsLayer = L.geoJson(null, {
-  style: style,
-  onEachFeature: function(feature, layer) {
-    layer.on({
-      click: function(e) {
-        window.location.href = '/building/' + e.target.feature.properties.parcel_id
+  map.addSource("ch-buildings", {
+      type: 'vector',
+      tiles: [
+        `https://jp4772.carto.com/api/v1/map/${cartoDiv.dataset.cartolayergroup}/{z}/{x}/{y}.mvt`
+      ],
+  });
+
+  map.addLayer({
+    "id": "buildings_fill",
+    "type": "fill",
+    "source": "ch-buildings",
+    "source-layer": "layer0",
+    'paint': {
+      'fill-outline-color': '#000',
+      'fill-opacity': 0.5,
+      'fill-color': {
+        'property': 'propcode',
+        'type': 'categorical',
+        'stops': [
+          ['R', '#d7191c'],
+          ['RE', '#d7191c'],
+          ['C', '#2b83ba'],
+          ['CE', '#2b83ba'],
+          ['I', '#ffffbf'],
+          ['IE', '#ffffbf'],
+          ['A', '#abdda4'],
+          ['AE', '#abdda4'],
+          ['null', '#bababa'],
+          ['H', '#bababa'],
+          ['LW', '#bababa'],
+          ['E', '#bababa'],
+          ['B', '#bababa']
+        ]
       }
-    });
+    }
+  });
 
-    // if (feature.properties) {
-    //   layer.bindPopup(makePopUpContent(feature.properties));
-    //   // layer.on('mouseover', function() { layer.openPopup(); });
-    //   // layer.on('mouseout', function() { layer.closePopup(); });
-    // }
+  map.addLayer({
+    "id": "buildings_fill_hover",
+    "type": "fill",
+    "source": "ch-buildings",
+    "source-layer": "layer0",
+    "layout": {},
+    "paint": {
+        "fill-color": "#3182bd",
+        "fill-opacity": 1
+    },
+    "filter": ["==", "parcel_id", ""]
+  });
+});
+
+
+// Click
+map.on('click', 'buildings_fill', function (e) {
+  window.location.href = '/building/' + e.features[0].properties.parcel_id;
+});
+
+// Hover
+var propcodeTranslate = function(code) {
+  switch (code) {
+    case 'A':
+      return "Agricultural";
+      break;
+    case 'B':
+      return "Land Bank";
+      break;
+    case 'C':
+      return "Commercial";
+      break;
+    case 'E':
+      return "Exempt";
+      break;
+    case 'R':
+      return "Residential";
+      break;
+    case 'I':
+      return "Industrial";
+      break;
+    case 'P':
+      return "Public Utility";
+      break;
+    case 'AE':
+      return "Agricultural Exempt";
+      break;
+    case 'CE':
+      return "Commericial Exempt";
+      break;
+    case 'IE':
+      return "Industrial Exempt";
+      break;
+    case 'RE':
+      return "Residential Exempt";
+      break;
+    case 'H':
+      return "Highway Exempt";
+      break;
+    case 'M':
+      return "Mineral Rights";
+      break;
+    case 'LW':
+      return "Listed With";
+      break;
+    default:
+      ""
   }
-}).addTo(map);
+}
 
+map.on('mousemove', 'buildings_fill', function(e) {
+  map.getCanvas().style.cursor = 'pointer';
 
-// Query
-var sqlQuery = `SELECT the_geom, parcel_id, parcel_add FROM jp4772.ch_buildings`;
+  var buildingNameDiv = document.getElementById("building-id");
 
-var cartoSql = new cartodb.SQL({ user: 'jp4772' });
-cartoSql.execute(sqlQuery, null, { format: 'geojson' })
-.done(function(data) {
-  buildingsLayer.addData(data);
+  var buildingHTML = "<h4 class='building-info'>" + e.features[0].properties.parcel_add;
+  buildingHTML += ` <span class='label label-default'>${propcodeTranslate(e.features[0].properties.propcode)}</span>`;
+  if (e.features[0].properties.vacant) {
+    buildingHTML += " <span class='label label-danger'>Vacant</span>"
+  }
+
+  buildingNameDiv.innerHTML = buildingHTML + "</h4>";
+});
+
+map.on('mouseleave', 'buildings_fill', function() {
+  var buildingNameDiv = document.getElementById("building-id");
+  buildingNameDiv.innerHTML = "";
 });

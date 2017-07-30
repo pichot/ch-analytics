@@ -1,6 +1,4 @@
 # Neighborhood
-
-
 score (scaled)
 
 median_inc - median income (2016)

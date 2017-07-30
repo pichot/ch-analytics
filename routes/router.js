@@ -9,15 +9,22 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/buildings', function(req, res, next) {
-  res.render('buildings');
-});
+  var queryURI = `https://jp4772.carto.com/api/v1/map/named/ch_buildings?auth_token=${process.env.CARTO_API_KEY}`;
 
-router.get('/buildings/json', function(req, res, next) {
-  const sqlQuery = `SELECT * FROM jp4772.ch_buildings`;
-  const requestUrl = `https://jp4772.carto.com/api/v2/sql?q=${sqlQuery}&api_key=${process.env.CARTO_API_KEY}`;
+  // Instantiate anonymous map from named map template (https://carto.com/docs/carto-engine/maps-api/named-maps#instantiate)
+  request({
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    uri: queryURI,
+    method: 'POST'
+  }, function(error, response, body) {
+    const bodyJSON = JSON.parse(body);
+    const cartoLayerGroup = bodyJSON.layergroupid;
 
-  request(requestUrl, function (error, response, body) {
-    res.send(body);
+    console.log(cartoLayerGroup);
+
+    res.render('buildings', { cartoLayerGroup: cartoLayerGroup });
   });
 });
 
@@ -30,10 +37,6 @@ router.get('/building/:buildingId', function(req, res, next) {
     const building = bodyJSON.rows[0];
 
     res.render('building', { b: building, a: accounting });
-
-    // console.log('error:', error); // Print the error if one occurred
-    // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    // console.log('body:', body); // Print the HTML for the Google homepage.
   });
 });
 

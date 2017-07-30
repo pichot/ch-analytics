@@ -1,14 +1,13 @@
 extends layout
 
 block content
-  style.
-    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
-    #map {
-      height: 100%;
-    }
-    .popup-content p {
-      padding: 0;
-      margin: 0;
-    }
-  div#map
+  div#carto(data-cartoLayerGroup=cartoLayerGroup)
+  nav.navbar.navbar-default
+    div.container-fluid
+      div.navbar-header
+        a.navbar-brand(href='/buildings') CH Building Intellgience Database
+  
+  div.container-fill
+    div#building-id
+    div#map
   script(src='/javascripts/buildings.js')

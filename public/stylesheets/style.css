@@ -1,8 +1,25 @@
+html, body {
+  height: 100%;
+}
+
 body {
-  padding: 50px;
+  padding: 20px 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+#map, .container-fill {
+  height: calc(100% - 68px);
+  min-height: calc(100% - 68px);
+}
+
+#building-id {
+  height: 32px;
+}
+
+.building-info {
+  text-transform: capitalize;
 }
