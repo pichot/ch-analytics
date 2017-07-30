@@ -4,16 +4,19 @@ block content
   nav.navbar.navbar-default
     div.container-fluid
       div.navbar-header
-        a.navbar-brand(href='/buildings') CH Building Intellgience Database
+        a.navbar-brand(href='/buildings') CH Building Intelligence Database
+      a.btn.btn-primary.navbar-btn(href='/buildings') Back to Map
+      a.btn.btn-success.navbar-btn.navbar-right(onclick='window.print()') Print Report
   
-  h1= b.parcel_add
+  h3= b.parcel_add
+  h4.label-list
+    span.label.label-default #{propcode}
+    if b.own_occup
+      span.label.label-primary Owner-Occupied
+    else
+      span.label.label-primary Rental
     if b.vacant
-      span.label.label-warning Vacant
-  h3= b.owner
-  if b.own_occup
-    span.label.label-primary Owner-Occupied
-  else
-    span.label.label-primary Not Owner-Occupied
+      span.label.label-danger Vacant
 
   div.row
     div.col-md-6
@@ -41,7 +44,6 @@ block content
           h3.panel-title Land Use
         ul.list-group
           li.list-group-item Land Use Code #{b.land_use}
-          li.list-group-item Property Code #{b.propcode}
           li.list-group-item Number of Building Permits #{b.perm_num}
           li.list-group-item Total Commercial Square Feet #{b.tot_com_sq}
           li.list-group-item Total Residential Square Feet #{b.tot_res_sq}
@@ -57,3 +59,20 @@ block content
           li.list-group-item # of Complaints #{b.comp_count}
           li.list-group-item Years from the Last Case #{b.last_case}
           li.list-group-item Number of Negative Actions #{b.negact_cou}
+          
+  div.row
+    div.col-md-6
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Police Events
+        table.table
+          thead
+            tr
+              th Date
+              th Call Date
+          each val in policecalls
+            tr
+              td= val.enddate
+              td= val.offtext 
+
+      

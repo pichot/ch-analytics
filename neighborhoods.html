@@ -1,60 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Cleveland Heights Neighborhood Analytics</title>
+    <title>CH Neighborhood Analytics</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <link rel="shortcut icon" href="https://cartodb.com/assets/favicon.ico" />
     <style>
-      html, body, #map {
+      html, body {
         height: 100%;
         padding: 0;
         margin: 0;
       }
     </style>
-
-    <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
   </head>
   <body>
-    <div id="map"></div>
-
-    <!-- include cartodb.js library -->
-    <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
-
-    <script>
-      function main() {
-        cartodb.createVis('map', 'https://nyu.carto.com/u/jp4772/api/v2/viz/65a1ad24-8a26-475c-b7aa-e6a78f6b62ab/viz.json', {
-            title: true,
-            description: true,
-            search: true,
-            tiles_loader: true,
-            center_lat: 41.520052,
-            center_lon: -81.556235,
-            zoom: 17,
-            scrollwheel: true,
-            search: true,
-            shareable: false,
-            layer_selector: true,
-        })
-        .done(function(vis, layers) {
-          // layer 0 is the base layer, layer 1 is cartodb layer
-          // setInteraction is disabled by default
-          layers[1].setInteraction(true);
-          layers[1].on('featureOver', function(e, pos, latlng, data) {
-            cartodb.log.log(e, pos, latlng, data);
-          });
-          // you can get the native map to work with it
-          var map = vis.getNativeMap();
-          // now, perform any operations you need
-          // map.setZoom(3);
-          // map.panTo([50.5, 30.5]);
-
-        })
-        .error(function(err) {
-          console.log(err);
-        });
-      }
-      window.onload = main;
-    </script>
+    <iframe width="100%" height="100%" frameborder="0" src="https://nyu.carto.com/u/jp4772/builder/65a1ad24-8a26-475c-b7aa-e6a78f6b62ab/embed" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
   </body>
 </html>

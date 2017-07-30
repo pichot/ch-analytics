@@ -23,3 +23,7 @@ a {
 .building-info {
   text-transform: capitalize;
 }
+
+.label-list span {
+  margin-right: 10px;
+}
