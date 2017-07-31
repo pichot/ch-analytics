@@ -17,62 +17,76 @@ block content
       span.label.label-primary Rental
     if b.vacant
       span.label.label-danger Vacant
+  
+  h5 Owned by #{b.owner}
+  h5 Last sold in <strong>#{b.last_sale}</strong> by <strong>#{b.seller}</strong> for <strong>#{a.formatMoney(b.sale_amoun)}</strong>
 
   div.row
-    div.col-md-6
-      div.panel.panel-default
-        div.panel-heading
-          h3.panel-title Sale
-        ul.list-group
-          li.list-group-item Last Sale Date #{b.last_sale}
-          li.list-group-item Sale Amount #{a.formatMoney(b.sale_amoun)}
-          li.list-group-item Seller #{b.seller}
-
-    div.col-md-6
-      div.panel.panel-default
-        div.panel-heading
-          h3.panel-title Tax Information
-        ul.list-group
-          li.list-group-item Building Tax #{a.formatMoney(b.building_t)}
-          li.list-group-item Gross Tax #{a.formatMoney(b.gross_tax)}
-          li.list-group-item Land Tax #{a.formatMoney(b.land_tax)}
-        
-  div.row  
-    div.col-md-6
-      div.panel.panel-default
-        div.panel-heading
-          h3.panel-title Land Use
-        ul.list-group
-          li.list-group-item Land Use Code #{b.land_use}
-          li.list-group-item Number of Building Permits #{b.perm_num}
-          li.list-group-item Total Commercial Square Feet #{b.tot_com_sq}
-          li.list-group-item Total Residential Square Feet #{b.tot_res_sq}
-          li.list-group-item Total Square Feet #{b.total_sqft}
-
-    div.col-md-6
+    div.col-md-4
       div.panel.panel-default
         div.panel-heading
           h3.panel-title Property Events
         ul.list-group
-          li.list-group-item # of Foreclosures #{b.fc_count}
-          li.list-group-item # of Police Dispatches #{b.pd_count}
-          li.list-group-item # of Complaints #{b.comp_count}
-          li.list-group-item Years from the Last Case #{b.last_case}
-          li.list-group-item Number of Negative Actions #{b.negact_cou}
-          
+          li.list-group-item Number of Building Permits
+            span.badge= b.perm_num
+          li.list-group-item # of Foreclosures 
+            span.badge= b.fc_count
+          li.list-group-item # of Complaints
+            span.badge= b.comp_count
+          li.list-group-item Years from the Last Case 
+            span.badge= b.last_case
+          li.list-group-item Number of Negative Actions
+            span.badge= b.negact_cou
+
+    div.col-md-4
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Land Use
+            span.label.label-primary.pull-right Code #{b.land_use}
+        table.table
+          tr
+            td Commercial Floor Space
+            td #{b.tot_com_sq} sq ft
+          tr
+            td Residential Floor Space
+            td #{b.tot_res_sq} sq ft
+          tr
+            td Total Floor Space
+            td #{b.total_sqft} sq ft
+
+    div.col-md-4
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Tax Information
+        table.table
+          tr
+            td Building Tax
+            td= a.formatMoney(b.building_t)
+          tr
+            td Land Tax
+            td= a.formatMoney(b.gross_tax)
+          tr
+            td
+              strong Gross Tax
+            td
+              strong= a.formatMoney(b.land_tax)
+
   div.row
     div.col-md-6
       div.panel.panel-default
         div.panel-heading
           h3.panel-title Police Events
-        table.table
-          thead
-            tr
-              th Date
-              th Call Date
-          each val in policecalls
-            tr
-              td= val.enddate
-              td= val.offtext 
+            span.badge.pull-right= policecalls.length
+        if policecalls.length
+          table.table
+            thead
+              tr
+                th Date
+                th Call Date
+            each val in policecalls
+              tr
+                - var d = new Date(val.enddate)
+                td= d.toDateString()
+                td= val.offtext 
 
       
