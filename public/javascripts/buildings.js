@@ -10,8 +10,6 @@ var map = new mapboxgl.Map({
 map.on('load', function () {
   var cartoDiv = document.getElementById('carto');
 
-  console.log(cartoDiv.dataset.cartolayergroup);
-
   map.addSource("ch-buildings", {
       type: 'vector',
       tiles: [
