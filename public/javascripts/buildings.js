@@ -64,7 +64,9 @@ map.on('load', function () {
 
 // Click
 map.on('click', 'buildings_fill', function (e) {
-  window.location.href = '/building/' + e.features[0].properties.parcel_id;
+  if (e.features[0].properties.parcel_id !== null) {
+    window.location.href = '/building/' + e.features[0].properties.parcel_id;
+  }
 });
 
 // Hover
