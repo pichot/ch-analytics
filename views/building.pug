@@ -27,7 +27,7 @@ block content
         div.panel-heading
           h3.panel-title Property Events
         ul.list-group
-          li.list-group-item Number of Building Permits
+          li.list-group-item # of Building Permits
             span.badge= b.perm_num
           li.list-group-item # of Foreclosures 
             span.badge= b.fc_count
@@ -35,8 +35,6 @@ block content
             span.badge= b.comp_count
           li.list-group-item Years from the Last Case 
             span.badge= b.last_case
-          li.list-group-item Number of Negative Actions
-            span.badge= b.negact_cou
 
     div.col-md-4
       div.panel.panel-default
@@ -82,11 +80,27 @@ block content
             thead
               tr
                 th Date
-                th Call Date
+                th Description
             each val in policecalls
               tr
                 - var d = new Date(val.enddate)
                 td= d.toDateString()
-                td= val.offtext 
-
+                td= val.offtext
+    div.col-md-6
+      div.panel.panel-default
+        div.panel-heading
+          h3.panel-title Negative Actions
+            span.badge.pull-right= negactions.length
+        if negactions.length
+          table.table
+            thead
+              tr
+                th Date
+                th Status
+                th Action Desc.
+            each val in negactions
+              tr
+                td= val.case_year
+                td= val.case_status
+                td= val.action_code_desc
       

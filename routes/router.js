@@ -42,7 +42,13 @@ router.get('/building/:buildingId', function(req, res, next) {
       const policeJSON = JSON.parse(body);
       const policecalls = policeJSON.rows;
 
-      res.render('building', { b: building, a: accounting, policecalls: policecalls, propcode: propcodeTranslate(building.propcode) });
+      const negQuery = `SELECT action_code_desc, case_year, case_status, parcel_id FROM jp4772.ch_neg_actions WHERE parcel_id = ${req.params.buildingId} ORDER BY case_year DESC`
+      request(requestUrl(negQuery), function (error, response, body) {
+        const negJSON = JSON.parse(body);
+        const negactions = negJSON.rows;
+
+        res.render('building', { b: building, a: accounting, policecalls: policecalls, negactions: negactions, propcode: propcodeTranslate(building.propcode) });
+      });
     });
   });
 });
