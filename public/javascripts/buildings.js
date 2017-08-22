@@ -13,7 +13,7 @@ map.on('load', function () {
   map.addSource("ch-buildings", {
       type: 'vector',
       tiles: [
-        `https://jp4772.carto.com/api/v1/map/${cartoDiv.dataset.cartolayergroup}/{z}/{x}/{y}.mvt`
+        `https://chrisstreich.carto.com/api/v1/map/${cartoDiv.dataset.cartolayergroup}/{z}/{x}/{y}.mvt`
       ],
   });
 

@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/buildings', function(req, res, next) {
-  var queryURI = `https://jp4772.carto.com/api/v1/map/named/ch_buildings?auth_token=${process.env.CARTO_API_KEY}`;
+  var queryURI = `https://chrisstreich.carto.com/api/v1/map/named/ch_buildings?auth_token=${process.env.CARTO_API_KEY}`;
 
   // Instantiate anonymous map from named map template (https://carto.com/docs/carto-engine/maps-api/named-maps#instantiate)
   request({
@@ -27,22 +27,22 @@ router.get('/buildings', function(req, res, next) {
 });
 
 var requestUrl = function(sql) {
-  return `https://jp4772.carto.com/api/v2/sql?q=${sql}&api_key=${process.env.CARTO_API_KEY}`;
+  return `https://chrisstreich.carto.com/api/v2/sql?q=${sql}&api_key=${process.env.CARTO_API_KEY}`;
 }
 
 router.get('/building/:buildingId', function(req, res, next) {
-  const sqlQuery = `SELECT * FROM jp4772.ch_buildings WHERE parcel_id = ${req.params.buildingId}`;
+  const sqlQuery = `SELECT * FROM chrisstreich.ch_buildings WHERE parcel_id = ${req.params.buildingId}`;
 
   request(requestUrl(sqlQuery), function (error, response, body) {
     const bodyJSON = JSON.parse(body);
     const building = bodyJSON.rows[0];
 
-    const policeQuery = `SELECT offtext, enddate FROM jp4772.ch_building_police WHERE parcel_id = ${req.params.buildingId} ORDER BY enddate DESC`;
+    const policeQuery = `SELECT offtext, enddate FROM chrisstreich.ch_building_police WHERE parcel_id = ${req.params.buildingId} ORDER BY enddate DESC`;
     request(requestUrl(policeQuery), function (error, response, body) {
       const policeJSON = JSON.parse(body);
       const policecalls = policeJSON.rows;
 
-      const negQuery = `SELECT action_code_desc, case_year, case_status, parcel_id FROM jp4772.ch_neg_actions WHERE parcel_id = ${req.params.buildingId} ORDER BY case_year DESC`
+      const negQuery = `SELECT action_code_desc, case_year, case_status, parcel_id FROM chrisstreich.ch_neg_actions WHERE parcel_id = ${req.params.buildingId} ORDER BY case_year DESC`
       request(requestUrl(negQuery), function (error, response, body) {
         const negJSON = JSON.parse(body);
         const negactions = negJSON.rows;
