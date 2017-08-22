@@ -11,6 +11,27 @@ router.get('/', function(req, res, next) {
 router.get('/buildings', function(req, res, next) {
   var queryURI = `https://chrisstreich.carto.com/api/v1/map/named/ch_buildings?auth_token=${process.env.CARTO_API_KEY}`;
 
+  // NOTE: Must still manually generate named template
+
+  // POST https://carto_username.carto.com/api/v1/map/named
+  //   {
+  //     "version": "0.0.1",
+  //     "name": "ch_buildings",
+  //     "layergroup": {
+  // 	    "version": "1.0.3",
+  // 	    "layers": [
+  // 	        {
+  // 	            "type": "mapnik",
+  // 	            "options": {
+  // 	                "sql": "select the_geom_webmercator, parcel_id, parcel_add, vacant, propcode from ch_buildings",
+  // 	                "cartocss": "#table { marker-placement: point; }",
+  // 	                "cartocss_version": "2.3.0"
+  // 	            }
+  // 	        }
+  // 	    ]
+  //     }
+  // }
+
   // Instantiate anonymous map from named map template (https://carto.com/docs/carto-engine/maps-api/named-maps#instantiate)
   request({
     headers: {
@@ -31,18 +52,19 @@ var requestUrl = function(sql) {
 }
 
 router.get('/building/:buildingId', function(req, res, next) {
-  const sqlQuery = `SELECT * FROM chrisstreich.ch_buildings WHERE parcel_id = ${req.params.buildingId}`;
+  const sqlQuery = `SELECT * FROM ch_buildings WHERE parcel_id = ${req.params.buildingId}`;
 
   request(requestUrl(sqlQuery), function (error, response, body) {
     const bodyJSON = JSON.parse(body);
+    console.log(bodyJSON);
     const building = bodyJSON.rows[0];
 
-    const policeQuery = `SELECT offtext, enddate FROM chrisstreich.ch_building_police WHERE parcel_id = ${req.params.buildingId} ORDER BY enddate DESC`;
+    const policeQuery = `SELECT offtext, enddate FROM ch_building_police WHERE parcel_id = ${req.params.buildingId} ORDER BY enddate DESC`;
     request(requestUrl(policeQuery), function (error, response, body) {
       const policeJSON = JSON.parse(body);
       const policecalls = policeJSON.rows;
 
-      const negQuery = `SELECT action_code_desc, case_year, case_status, parcel_id FROM chrisstreich.ch_neg_actions WHERE parcel_id = ${req.params.buildingId} ORDER BY case_year DESC`
+      const negQuery = `SELECT action_code_desc, case_year, case_status, parcel_id FROM ch_neg_actions WHERE parcel_id = ${req.params.buildingId} ORDER BY case_year DESC`
       request(requestUrl(negQuery), function (error, response, body) {
         const negJSON = JSON.parse(body);
         const negactions = negJSON.rows;
