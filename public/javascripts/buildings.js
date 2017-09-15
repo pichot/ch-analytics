@@ -7,6 +7,10 @@ var map = new mapboxgl.Map({
     zoom: 12.071350911527107
 });
 
+var geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+});
+
 map.on('load', function () {
   var cartoDiv = document.getElementById('carto');
 
@@ -137,3 +141,6 @@ map.on('mouseleave', 'buildings_fill', function() {
   var buildingNameDiv = document.getElementById("building-id");
   buildingNameDiv.innerHTML = "";
 });
+
+
+map.addControl(geocoder);

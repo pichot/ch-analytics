@@ -5,7 +5,7 @@ var accounting = require('accounting');
 var path = require('path');
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Hello' });
 });
 
 router.get('/buildings', function(req, res, next) {
